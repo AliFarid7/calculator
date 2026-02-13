@@ -1,6 +1,8 @@
 let num1;
 let num2;
 let op;
+let displayCleared = false;
+
 
 function add (a, b) {
     return a + b;
@@ -15,6 +17,9 @@ function multiply (a, b) {
 };
 
 function divide (a,b) {
+    if(b === 0) {
+        return "Cannot divide by zero!"
+    };
     return a / b;
 };
 
@@ -32,6 +37,10 @@ let myResult = document.querySelector(".result");
 function handleNumber(){
     digitButtons.forEach(button => {
     button.addEventListener("click", () => {
+        if (displayCleared === true) {
+                myDisplay.textContent = "";  //
+                displayCleared = false;
+            }
         myDisplay.textContent += button.textContent;
     });
 });
@@ -40,12 +49,14 @@ function handleNumber(){
 function handleOperator(){
     operatorButtons.forEach(button => {
     button.addEventListener("click", () => {
+        if (num1 !== undefined && op !== undefined && myDisplay.textContent !== "") {
+                calculate();
+                op = button.textContent;
+                displayCleared = true;
+                return;
+            }
         num1 = Number(myDisplay.textContent);
-        myDisplay.textContent += button.textContent;
         op = button.textContent;
-            operatorButtons.forEach(button => {
-            button.disabled = true;
-            });        
         myDisplay.textContent = "";
     });
 });
@@ -53,18 +64,21 @@ function handleOperator(){
 
 function getResult(){
     myResult.addEventListener("click", () =>{
-        if (num1 === undefined || op === undefined) return;
-        num2 = Number(myDisplay.textContent);
-        const result = operator(op, num1, num2);
-        myDisplay.textContent = result;
-        num1 = result;
-        op = undefined;
-        num2 = undefined;
-        operatorButtons.forEach(button => {
-    button.disabled = false;
-        });
+        calculate();
     })
 }
+
+function calculate() {
+    if (op === undefined) return;
+    if (num1 === undefined || op === undefined) return;
+    num2 = Number(myDisplay.textContent);
+    const result = operator(op, num1, num2);
+    myDisplay.textContent = result;
+    num1 = result;
+    op = undefined;
+    num2 = undefined;
+}
+
 
 handleNumber();
 handleOperator();
