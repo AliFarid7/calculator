@@ -35,6 +35,8 @@ const digitButtons = document.querySelectorAll(".digit");
 const operatorButtons = document.querySelectorAll(".operator");
 let myDisplay = document.querySelector(".display");
 let myResult = document.querySelector(".result");
+let myDot = document.querySelector(".dot");
+let myBackspaceButton = document.querySelector(".backspace");
 let clearButton = document.querySelector(".clear");
 
 function handleNumber(){
@@ -112,7 +114,55 @@ function clear(){
     })
 }
 
+function addDecimal(){
+    myDot.addEventListener("click", () =>{
+        if (myDisplay.textContent.includes(".")) {
+    return;
+}
+        myDisplay.textContent += ".";
+    })
+}
+
+function goBack(){
+    myBackspaceButton.addEventListener("click", () =>{
+        myDisplay.textContent = myDisplay.textContent.slice(0, -1);
+    })
+}
+
+function handleKeyboard() {
+    document.addEventListener("keydown", (e) => {
+        if (e.key >= '0' && e.key <= '9') {
+            const button = Array.from(digitButtons).find(btn => btn.textContent === e.key);
+            if (button) button.click();
+        }
+        
+        if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
+            const button = Array.from(operatorButtons).find(btn => btn.textContent === e.key);
+            if (button) button.click();
+        }
+        
+        if (e.key === 'Enter' || e.key === '=') {
+            myResult.click();
+        }
+        
+        if (e.key === '.') {
+            myDot.click();
+        }
+        
+        if (e.key === 'Backspace') {
+            myBackspaceButton.click();
+        }
+        
+        if (e.key === 'Escape' || e.key === 'c' || e.key === 'C') {
+            clearButton.click();
+        }
+    });
+}
+
 handleNumber();
 handleOperator();
 getResult();
 clear();
+addDecimal()
+goBack()
+handleKeyboard();
